@@ -29,7 +29,7 @@ function App() {
           const homeworld = planetData.find(planet => planet.id === person.homeworld)
           return {...person, homeworld}
         })
-        console.log(combinedData)
+        //console.log(combinedData)
 
         setCharacters(combinedData)
       } catch (error) {
@@ -47,7 +47,11 @@ function App() {
       <p>See the README of the project for instructions on completing this challenge</p>
       {/* ❗ Map over the data in state, rendering a Character at each iteration */}
 
-      
+      <div>
+        {characters.map(character => (
+          <Character key={character.id} character={character} />
+        ))}
+      </div>
     </div>
   )
 }
