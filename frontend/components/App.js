@@ -10,38 +10,44 @@ function App() {
   const [characters, setCharacters] = useState([])
  
   // ❗ Create effects to fetch the data and put it in state
+  
   useEffect(() => {
-    Promise.all([
-      axios.get('http://localhost:9009/api/people'),
-      axios.get('http://localhost:9009/api/planets')
-    ])
-    .then(([peopleRes, planetRes])=> {
-      const peopleData = peopleRes.data
-      const planetData = planetRes.data
+    const getData = async () => {
+      try {
+        const [peopleRes, planetRes] = await Promise.all([
+          axios.get('http://localhost:9009/api/people'),
+          axios.get('http://localhost:9009/api/planets')
+        ]);
+        
+        const peopleData = peopleRes.data
+        const planetData = planetRes.data
 
-      console.log(peopleData)
-      console.log(planetData)
+        //console.log(peopleData)
+        //console.log(planetData)
 
-      const combinedData = peopleData.map(person => {
-        const homeworld = planetData.find(planet => planet.id === person.homeworld);
-        return {
-          ...person,
-          homeworld: homeworld ? { id: homeworld.id, name: `${homeworld.firstName} ${homeworld.lastName}` }
-          : { id: person.homeworld, name: 'unknown planet' }
-        }
-      })
-      setCharacters(combinedData)
-    })
-    .catch(err => {
-      console.log(err.message)
-    })
+        const combinedData = peopleData.map(person => {
+          const homeworld = planetData.find(planet => planet.id === person.homeworld)
+          return {...person, homeworld}
+        })
+        console.log(combinedData)
+
+        setCharacters(combinedData)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    getData()
   }, [])
+   
 
-  return (
+
+    return (
     <div>
       <h2>Star Wars Characters</h2>
       <p>See the README of the project for instructions on completing this challenge</p>
       {/* ❗ Map over the data in state, rendering a Character at each iteration */}
+
+      
     </div>
   )
 }
